@@ -1,22 +1,10 @@
 var version = 62;
 console.log('Version - ' + version);
 
-// Link to database
-var config = {
-    apiKey: "AIzaSyCzrx1SkMDyNlE4X2gOadgtPf8asSAWh70",
-    authDomain: "poke-pets.firebaseapp.com",
-    databaseURL: "https://poke-pets.firebaseio.com",
-    projectId: "poke-pets",
-    storageBucket: "poke-pets.appspot.com",
-    messagingSenderId: "416846931"
-};
-firebase.initializeApp(config);
-var database = firebase.database();
-
 var pokemonNames = [
-{name: 'Bulbasaur', image: 'images/bulbasaur_lg.png'},
-{name: 'Squirtle', image: 'images/squirtle_lg.png'},
-{name: 'Charmander', image: 'images/charmander_lg.png'}
+  {name: 'Bulbasaur', image: 'images/bulbasaur_lg.png'},
+  {name: 'Squirtle', image: 'images/squirtle_lg.png'},
+  {name: 'Charmander', image: 'images/charmander_lg.png'}
 ];
 
 //Battle class
@@ -123,6 +111,7 @@ function mainBattle() {
     nextRound();
 
     //EVERYTHING AFTER THIS IS ONLY CALLED IN mainBattle()
+    // nice switch function!
     function nextEvent() {
         switch(eventWhich) {
             case 'event1':
@@ -276,7 +265,8 @@ function mainBattle() {
 
     //Player must get to this point in order to recieve rewards from the battle
     function rewards() {
-        if (win === true) {
+        // you can just use 'win' here as it will be true or false
+        if (win) {
             expReward = 5 + Math.ceil(5*Math.random());
             moneyReward = 50 + Math.ceil(50*Math.random());
             $('#battleText').text(mainPlayer.name + ' gets ' + expReward + ' EXP and $' + moneyReward + ' for winning.');

@@ -1,17 +1,4 @@
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyCzrx1SkMDyNlE4X2gOadgtPf8asSAWh70",
-    authDomain: "poke-pets.firebaseapp.com",
-    databaseURL: "https://poke-pets.firebaseio.com",
-    projectId: "poke-pets",
-    storageBucket: "poke-pets.appspot.com",
-    messagingSenderId: "416846931"
-};
-firebase.initializeApp(config);
-// Link to database
-var database = firebase.database();
-
-
+// moving to single file
 $("#button").click(function() {
     // Create instance of Facebook provider object
     var provider = new firebase.auth.FacebookAuthProvider();
@@ -27,9 +14,19 @@ $("#button").click(function() {
 
         // If new user...
         database.ref("users/" + id).once("value", function(snapshot) {
-            var exists = snapshot.val() !== null;
-            if (!exists) {
-                // Write to DB
+            // if exists is 'null' it won't
+            // trigger an if statement
+            // i.e.
+            //
+            // if (null) { 
+            //   console.log("print this"); 
+            // } else { 
+            //   console.log("print that"); 
+            // }
+            //
+            // will return -> print that
+            var existing_user = snapshot.val()
+            if (!existing_user) { // Write to DB
                 database.ref("users/" + id).set({
                     name: name,
                     profilePic: picture,

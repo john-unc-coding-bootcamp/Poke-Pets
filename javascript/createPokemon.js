@@ -5,6 +5,7 @@
  * Last edited 6/8/2017
  */
 
+// nice constructors!
 //Player constructor for creating AI
 function Player(Name, Image, Pokemon) {
     this.Name = Name;

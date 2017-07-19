@@ -1,27 +1,28 @@
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyCzrx1SkMDyNlE4X2gOadgtPf8asSAWh70",
-    authDomain: "poke-pets.firebaseapp.com",
-    databaseURL: "https://poke-pets.firebaseio.com",
-    projectId: "poke-pets",
-    storageBucket: "poke-pets.appspot.com",
-    messagingSenderId: "416846931"
-};
-firebase.initializeApp(config);
-// Link to database
-var database = firebase.database();
+// moving to single file
 var player;
 
 database.ref("users").once("value", function(snapshot) {
     // Get correct user data from localstorage
     player = snapshot.val()[localStorage.getItem("id")];
 
-    if (player["pokemon"] === undefined) {
-        $("#player").addClass("hidden");
-        chooseStarter(player);
-    } else {
+	 // undefined works the same as null or false
+	 // if player["pokemon"] is 'undefined' it won't
+	 // trigger an if statement
+	 // i.e.
+	 //
+	 // if (undefined) { 
+	 //   console.log("print this"); 
+	 // } else { 
+	 //   console.log("print that"); 
+	 // }
+	 //
+	 // will return -> print that
+    if (player["pokemon"]) {
         drawPlayer(player);
         drawMenu();
+    } else {
+        $("#player").addClass("hidden");
+        chooseStarter(player);
     }  
 })
 
@@ -54,31 +55,24 @@ function chooseStarter(player) {
     pokemon2.append("<img src='images/charmander_lg.png' class='starterImage'>");
     pokemon3.append("<img src='images/squirtle_lg.png' class='starterImage'>");
 
+		// Can DRY this up
+    function clickPokemon(pokemon) {
+      database.ref("users/" + localStorage.getItem("id")).update({
+        pokemon: [pokemon]
+      });
+      $("#content").empty();
+      drawPlayer(player);
+      drawMenu();
+    }
+
+    bulbasaur = new Pokemon("Bulbasaur", "#", "#", "images/bulbasaur_lg.png", 60, 0, new Skill("Vine Whip", 5))
+    charamander = new Pokemon("Charmander", "#", "#", "images/charmander_lg.png", 60, 0, new Skill("Ember", 5))
+    squirtle = new Pokemon("Squirtle", "#", "#", "images/squirtle_lg.png", 60, 0, new Skill("Bubble", 5))
+		
     // Add Click Events
-    pokemon1.click(function() {
-        database.ref("users/" + localStorage.getItem("id")).update({
-            pokemon: [new Pokemon("Bulbasaur", "#", "#", "images/bulbasaur_lg.png", 60, 0, new Skill("Vine Whip", 5))]
-        });
-        $("#content").empty();
-        drawPlayer(player);
-        drawMenu();
-    });
-    pokemon2.click(function() {
-        database.ref("users/" + localStorage.getItem("id")).update({
-            pokemon: [new Pokemon("Charmander", "#", "#", "images/charmander_lg.png", 60, 0, new Skill("Ember", 5))]
-        });
-        $("#content").empty();
-        drawPlayer(player);
-        drawMenu();
-    });
-    pokemon3.click(function() {
-        database.ref("users/" + localStorage.getItem("id")).update({
-            pokemon: [new Pokemon("Squirtle", "#", "#", "images/squirtle_lg.png", 60, 0, new Skill("Bubble", 5))]
-        });
-        $("#content").empty();
-        drawPlayer(player);
-        drawMenu();
-    });
+    pokemon1.click(clickPokemon(bulbasaur));
+    pokemon2.click(clickPokemon(charamander));
+    pokemon3.click(clickPokemon(squirtle);
     
     // Append Pokemon Divs
     $("#content").append(pokemon1, pokemon2, pokemon3);
